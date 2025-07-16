@@ -1,176 +1,63 @@
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
+const rooms = [
+  { number: 101, type: 'Single', status: 'Available', guest: '' },
+  { number: 102, type: 'Double', status: 'Available', guest: '' },
+  { number: 103, type: 'Suite', status: 'Available', guest: '' },
+  { number: 104, type: 'Single', status: 'Available', guest: '' },
+  { number: 105, type: 'Double', status: 'Available', guest: '' },
+];
 
-hamburger.addEventListener("click", mobileMenu);
-
-function mobileMenu()   {
-    hamburger.classList.toggle("active");
-    navMenu.classList.toggle("active");
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  if (id === 'rooms') updateRoomTable();
 }
 
-const navLink = document.querySelectorAll('.nav-link');
-navLink.forEach((n) => n.addEventListener("click", closeMenu));
+function bookRoom() {
+  const name = document.getElementById('guestName').value;
+  const type = document.getElementById('roomType').value;
+  const checkIn = document.getElementById('checkInDate').value;
+  const checkOut = document.getElementById('checkOutDate').value;
+  const msg = document.getElementById('bookingMsg');
 
-function closeMenu()    {
-    hamburger.classList.remove("active");
-    navMenu.classList.toggle("active");
-}
-
-let datePopup = document.getElementById("date-popup");
-let roomPopup = document.getElementById("room-popup");
-let ratesPopup = document.getElementById("rates-popup");
-
-function dateOpenPopup()    {
-    datePopup.classList.add("date-open-popup");
-}
-function dateClosePopup()    {
-    datePopup.classList.remove("date-open-popup");
-}
-
-function roomOpenPopup()    {
-    roomPopup.classList.add("room-open-popup");
-}
-function roomClosePopup()    {
-    roomPopup.classList.remove("room-open-popup");
-}
-
-function ratesOpenPopup()    {
-    ratesPopup.classList.add("rates-open-popup");
-}
-function ratesClosePopup()    {
-    ratesPopup.classList.remove("rates-open-popup");
-}
-
-
-const picker = new easepick.create({
-    element: "#datepicker",
-    css: [
-        "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.css"
-    ],
-    zIndex: 10,
-    grid: 2,
-    calendars: 2,
-    inline: true,
-    plugins: [
-        "RangePlugin"
-    ]
-})
-
-
-let italyDiv = document.getElementById("italy-div");
-let italyText = document.getElementById("italy-text");
-
-italyDiv.addEventListener('mouseenter', () => italyText.classList.add("hover-country-text"));
-italyDiv.addEventListener('mouseleave', () => italyText.classList.remove("hover-country-text"));
-
-let portugalDiv = document.getElementById("portugal-div");
-let portugalText = document.getElementById("portugal-text");
-
-portugalDiv.addEventListener('mouseenter', () => portugalText.classList.add("hover-country-text"));
-portugalDiv.addEventListener('mouseleave', () => portugalText.classList.remove("hover-country-text"));
-
-
-let japanDiv = document.getElementById("japan-div");
-let japanText = document.getElementById("japan-text");
-
-japanDiv.addEventListener('mouseenter', () => japanText.classList.add("hover-country-text"));
-japanDiv.addEventListener('mouseleave', () => japanText.classList.remove("hover-country-text"));
-
-
-let egyptDiv = document.getElementById("egypt-div");
-let egyptText = document.getElementById("egypt-text");
-
-egyptDiv.addEventListener('mouseenter', () => egyptText.classList.add("hover-country-text"));
-egyptDiv.addEventListener('mouseleave', () => egyptText.classList.remove("hover-country-text"));
-
-
-
-
-let discountDiv = document.getElementById("discount-div");
-let discountText = document.getElementById("discount-text");
-
-discountDiv.addEventListener('mouseenter', () => discountText.classList.add("hover-experience-text"));
-discountDiv.addEventListener('mouseleave', () => discountText.classList.remove("hover-experience-text"));
-
-let pointsDiv = document.getElementById("points-div");
-let pointsText = document.getElementById("points-text");
-
-pointsDiv.addEventListener('mouseenter', () => pointsText.classList.add("hover-experience-text"));
-pointsDiv.addEventListener('mouseleave', () => pointsText.classList.remove("hover-experience-text"));
-
-let parkingDiv = document.getElementById("parking-div");
-let parkingText = document.getElementById("parking-text");
-
-parkingDiv.addEventListener('mouseenter', () => parkingText.classList.add("hover-experience-text"));
-parkingDiv.addEventListener('mouseleave', () => parkingText.classList.remove("hover-experience-text"));
-
-let plangDiv = document.getElementById("plan-div");
-let planText = document.getElementById("plan-text");
-
-plangDiv.addEventListener('mouseenter', () => planText.classList.add("hover-experience-text"));
-plangDiv.addEventListener('mouseleave', () => planText.classList.remove("hover-experience-text"));
-
-let firstTimeDiv = document.getElementById("first-time-div");
-let firstTimeText = document.getElementById("first-time-text");
-
-firstTimeDiv.addEventListener('mouseenter', () => firstTimeText.classList.add("hover-experience-text"));
-firstTimeDiv.addEventListener('mouseleave', () => firstTimeText.classList.remove("hover-experience-text"));
-
-let membersDiv = document.getElementById("members-div");
-let membersText = document.getElementById("members-text");
-
-membersDiv.addEventListener('mouseenter', () => membersText.classList.add("hover-experience-text"));
-membersDiv.addEventListener('mouseleave', () => membersText.classList.remove("hover-experience-text"));
-
-
-
-function topFunction() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+  const room = rooms.find(r => r.type === type && r.status === 'Available');
+  if (room) {
+    room.status = 'Booked';
+    room.guest = name;
+    msg.innerHTML = Room ${room.number} booked for ${name} from ${checkIn} to ${checkOut};
+  } else {
+    msg.innerHTML = 'No available rooms of selected type.';
   }
-  function openLoginForm() {
-    document.getElementById("loginModal").style.display = "block";
 }
 
-function closeLoginForm() {
-    document.getElementById("loginModal").style.display = "none";
+function checkInGuest() {
+  const name = document.getElementById('checkInName').value;
+  const guest = rooms.find(r => r.guest === name && r.status === 'Booked');
+  const msg = document.getElementById('checkInMsg');
+  if (guest) {
+    guest.status = 'Occupied';
+    msg.innerHTML = ${name} checked in to room ${guest.number}.;
+  } else {
+    msg.innerHTML = 'Booking not found or already checked in.';
+  }
 }
 
-function openSignupForm() {
-    document.getElementById("signupModal").style.display = "block";
+function checkOutGuest() {
+  const name = document.getElementById('checkOutName').value;
+  const guest = rooms.find(r => r.guest === name && r.status === 'Occupied');
+  const msg = document.getElementById('checkOutMsg');
+  if (guest) {
+    guest.status = 'Available';
+    guest.guest = '';
+    msg.innerHTML = ${name} checked out from room ${guest.number}.;
+  } else {
+    msg.innerHTML = 'Guest not found or already checked out.';
+  }
 }
 
-function closeSignupForm() {
-    document.getElementById("signupModal").style.display = "none";
-}
-
-function handleSignup() {
-    const name = document.getElementById("signupName").value;
-    const email = document.getElementById("signupEmail").value;
-    const password = document.getElementById("signupPassword").value;
-
-    if (!email || !password || !name) {
-        alert("Please fill all fields");
-        return;
-    }
-
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userPassword", password);
-    alert("Sign up successful!");
-    closeSignupForm();
-}
-
-function handleLogin() {
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-
-    const storedEmail = localStorage.getItem("userEmail");
-    const storedPassword = localStorage.getItem("userPassword");
-
-    if (email === storedEmail && password === storedPassword) {
-        alert("Login successful!");
-        closeLoginForm();
-    } else {
-        alert("Invalid credentials");
-    }
+function updateRoomTable() {
+  const table = document.getElementById('roomTable');
+  table.innerHTML = '';
+  rooms.forEach(r => {
+    table.innerHTML += <tr><td>${r.number}</td><td>${r.type}</td><td>${r.status}</td><td>${r.guest}</td></tr>;
+  });
 }
